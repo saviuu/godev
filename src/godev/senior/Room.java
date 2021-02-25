@@ -6,6 +6,7 @@
 package godev.senior;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -17,7 +18,7 @@ public class Room {
 
     private String nome;
     private int lotacao;
-    private ArrayList<Person> people = new ArrayList();
+    private HashMap<Integer, ArrayList<Person>> people = new HashMap();
 
     public String getNome() {
         return nome;
@@ -35,42 +36,75 @@ public class Room {
         this.lotacao = lotacao;
     }
 
-    public ArrayList<Person> getPeople() {
+    public HashMap<Integer, ArrayList<Person>> getPeople() {
         return people;
-    }
 
-    public void setPeople(ArrayList<Person> people) {
-        this.people = people;
     }
 
     public Room(String nome, int lotacao) {
         this.nome = nome;
         this.lotacao = lotacao;
 
+        people.put(1, new ArrayList());
+        people.put(2, new ArrayList());
+
     }
 
-    public static boolean addPeopleRoom(Person person) {
+    public static boolean addPeopleRoom(Person person, int etapa) {
 
         Room small = null;
         for (Room room : rooms) {
-            if (((small == null) || (room.people.size() < small.people.size()))&& room.people.size() < room.lotacao ) {
-                small = room;
+            if (((small == null) || (room.people.get(etapa).size() < small.people.get(etapa).size())) && room.people.get(etapa).size() < room.lotacao) {
+
+                if (etapa > 1 && !room.people.get(etapa - 1).contains(person)) {
+                    small = room;
+                } else if (etapa <= 1) {
+                    small = room;
+                }
             }
         }
 
         if (small != null) {
-            small.people.add(person);
-            return true;
+            ArrayList<Person> peopleList = small.people.get(etapa);
+            if (peopleList != null) {
+                peopleList.add(person);
+                return true;
+            }
+
         } else {
             return false;
         }
+        return false;
+    }
 
+    public String makePeopleList(ArrayList<Person> peopleList) {
+
+        String list = "";
+        for (Person p : peopleList) {
+            list += p.getNome() + " " + p.getSobrenome() + "; ";
+        }
+
+        if (list.length() > 1) {
+            list = list.substring(0, list.length() - 2);
+        }
+
+        return list;
     }
 
     @Override
     public String toString() {
-        return "Room{" + "nome=" + nome + ", lotacao=" + lotacao + ", people=" + people.size() + '}';
+        String textConsult = "";
+        String peopleList1 = makePeopleList(this.people.get(1));
+        String peopleList2 = makePeopleList(this.people.get(2));
+
+        textConsult += "Nome: " + this.nome + " \n";
+        textConsult += "Lotação: " + this.lotacao + " \n";
+        textConsult += "Participantes da primeira etapa: " + peopleList1 + " \n";
+        textConsult += "Participantes da segunda etapa: " + peopleList2 + " \n";
+
+        return textConsult;
     }
+
     public static void printRooms() {
         rooms.forEach((room) -> {
             System.out.println(room.toString());

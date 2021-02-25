@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class Person {
 
+    public static final String fileName = "people.data";
+
     public static ArrayList<Person> people = new ArrayList();
 
     private String nome;
@@ -38,5 +40,26 @@ public class Person {
         this.nome = nome;
         this.sobrenome = sobrenome;
 
+    }
+
+    public static boolean savePeople() {
+
+        String content = "";
+        for (Person person : people) {
+            content += person.getNome() + ";" + person.getSobrenome() + "\n";
+        }
+        return Arquivo.Write(fileName, content);
+
+    }
+
+    public static void loadPeople() {
+        String content = Arquivo.Read(fileName);
+        for (String line : content.split("\n")) {
+            String[] data = line.split(";");
+            String nome = data[0];
+            String sobrenome = data[1];
+            people.add(new Person(nome, sobrenome));
+
+        }
     }
 }
