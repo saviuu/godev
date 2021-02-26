@@ -18,6 +18,8 @@ public class GoDevSenior {
      */
     public static void main(String[] args) {
         Person.loadPeople();
+        Food.loadFood();
+        Room.loadRoom();
 
         Scanner in = new Scanner(System.in);
 
@@ -65,6 +67,8 @@ public class GoDevSenior {
 
                     case 5:
                         Person.savePeople();
+                        Food.saveFood();
+                        Room.saveRoom();
                         break;
                 }
             } catch (NumberFormatException e) {

@@ -15,6 +15,7 @@ import java.util.HashMap;
 public class Room {
 
     public static ArrayList<Room> rooms = new ArrayList();
+    public static String fileName = "rooms.data";
 
     private String nome;
     private int lotacao;
@@ -77,15 +78,15 @@ public class Room {
         return false;
     }
 
-    public String makePeopleList(ArrayList<Person> peopleList) {
+    public static String makePeopleList(ArrayList<Person> peopleList, String separator) {
 
         String list = "";
         for (Person p : peopleList) {
-            list += p.getNome() + " " + p.getSobrenome() + "; ";
+            list += p.getNome() + " " + p.getSobrenome() + separator;
         }
 
         if (list.length() > 1) {
-            list = list.substring(0, list.length() - 2);
+            list = list.substring(0, list.length() - separator.length());
         }
 
         return list;
@@ -94,8 +95,8 @@ public class Room {
     @Override
     public String toString() {
         String textConsult = "";
-        String peopleList1 = makePeopleList(this.people.get(1));
-        String peopleList2 = makePeopleList(this.people.get(2));
+        String peopleList1 = makePeopleList(this.people.get(1), ", ");
+        String peopleList2 = makePeopleList(this.people.get(2), ", ");
 
         textConsult += "Nome: " + this.nome + " \n";
         textConsult += "Lotação: " + this.lotacao + " \n";
@@ -109,5 +110,51 @@ public class Room {
         rooms.forEach((room) -> {
             System.out.println(room.toString());
         });
+        
+    }
+     public static boolean saveRoom() {
+
+        String content = "";
+        for (Room room : rooms) {
+            content += room.getNome() + ";" + room.getLotacao() + ";1:" + makePeopleList(room.people.get(1), "/") + ";2:" + makePeopleList(room.people.get(2), "/") + "\n";
+        }
+        return Arquivo.Write(fileName, content);
+
+    }
+
+    public static ArrayList<Person> returnPeopleListFromFile(String peopleList) {
+        ArrayList<Person> list = new ArrayList();
+        String[] peopleListData = peopleList.split(":");
+        int etapa = Integer.parseInt(peopleListData[0]);
+        String[] pData = peopleListData[1].split("/");
+        for (String person : pData) {
+            Person p = null;
+            for (Person pe : Person.people) {
+                if ((pe.getNome() + pe.getSobrenome()).equals(person.replaceAll(" ", ""))) {
+                    p = pe;
+                }
+            }
+
+            if (p != null) {
+                list.add(p);
+            }
+        }
+        return list;
+    }
+
+    public static void loadRoom() {
+        String content = Arquivo.Read(fileName);
+        if (!content.isEmpty()) {
+            for (String line : content.split("\n")) {
+                String[] data = line.split(";");
+                String placeName = data[0];
+                int lotacao = Integer.parseInt(data[1]);
+                Room room = new Room(placeName, lotacao);
+                Room.rooms.add(room);
+                room.people.put(1, returnPeopleListFromFile(data[2]));
+                room.people.put(2, returnPeopleListFromFile(data[3]));
+
+            }
+        }
     }
 }

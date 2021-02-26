@@ -54,12 +54,14 @@ public class Person {
 
     public static void loadPeople() {
         String content = Arquivo.Read(fileName);
-        for (String line : content.split("\n")) {
-            String[] data = line.split(";");
-            String nome = data[0];
-            String sobrenome = data[1];
-            people.add(new Person(nome, sobrenome));
+        if (!content.isEmpty()) {
+            for (String line : content.split("\n")) {
+                String[] data = line.split(";");
+                String nome = data[0];
+                String sobrenome = data[1];
+                people.add(new Person(nome, sobrenome));
 
+            }
         }
     }
 }

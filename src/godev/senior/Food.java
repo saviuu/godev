@@ -14,6 +14,7 @@ import java.util.HashMap;
  */
 public class Food {
 
+    public static String fileName = "foodPlaces.data";
     public static ArrayList<Food> foodPlace = new ArrayList();
 
     private String nome;
@@ -66,15 +67,15 @@ public class Food {
 
     }
 
-    public String makePeopleList(ArrayList<Person> peopleList) {
+    public static String makePeopleList(ArrayList<Person> peopleList, String separator) {
 
         String list = "";
         for (Person p : peopleList) {
-            list += p.getNome() + " " + p.getSobrenome() + "; ";
+            list += p.getNome() + " " + p.getSobrenome() + separator;
         }
 
         if (list.length() > 1) {
-            list = list.substring(0, list.length() - 2);
+            list = list.substring(0, list.length() - separator.length());
         }
 
         return list;
@@ -83,8 +84,8 @@ public class Food {
     @Override
     public String toString() {
         String textConsult = "";
-        String peopleList1 = makePeopleList(this.people.get(1));
-        String peopleList2 = makePeopleList(this.people.get(2));
+        String peopleList1 = makePeopleList(this.people.get(1), ", ");
+        String peopleList2 = makePeopleList(this.people.get(2), ", ");
 
         textConsult += "Nome: " + this.nome + " \n";
         textConsult += "Participantes da primeira etapa: " + peopleList1 + " \n";
@@ -97,5 +98,50 @@ public class Food {
         foodPlace.forEach(food -> {
             System.out.println(food.toString());
         });
+    }
+
+    public static boolean saveFood() {
+
+        String content = "";
+        for (Food food : foodPlace) {
+            content += food.getNome() + ";1:" + makePeopleList(food.people.get(1), "/") + ";2:" + makePeopleList(food.people.get(2), "/") + "\n";
+        }
+        return Arquivo.Write(fileName, content);
+
+    }
+
+    public static ArrayList<Person> returnPeopleListFromFile(String peopleList) {
+        ArrayList<Person> list = new ArrayList();
+        String[] peopleListData = peopleList.split(":");
+        int etapa = Integer.parseInt(peopleListData[0]);
+        String[] pData = peopleListData[1].split("/");
+        for (String person : pData) {
+            Person p = null;
+            for (Person pe : Person.people) {
+                if ((pe.getNome() + pe.getSobrenome()).equals(person.replaceAll(" ", ""))) {
+                    p = pe;
+                }
+            }
+
+            if (p != null) {
+                list.add(p);
+            }
+        }
+        return list;
+    }
+
+    public static void loadFood() {
+        String content = Arquivo.Read(fileName);
+        if (!content.isEmpty()) {
+            for (String line : content.split("\n")) {
+                String[] data = line.split(";");
+                String placeName = data[0];
+                Food food = new Food(placeName);
+                Food.foodPlace.add(food);
+                food.people.put(1, returnPeopleListFromFile(data[1]));
+                food.people.put(2, returnPeopleListFromFile(data[2]));
+
+            }
+        }
     }
 }
