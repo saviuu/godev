@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 /**
  *
- * @author Carlos
+ * @author Sávio Bertoldi
  */
 public class Room {
 
@@ -106,13 +106,13 @@ public class Room {
         return textConsult;
     }
 
-    public static void printRooms() {
+    public static void print() {
         rooms.forEach((room) -> {
             System.out.println(room.toString());
         });
         
     }
-     public static boolean saveRoom() {
+     public static boolean save() {
 
         String content = "";
         for (Room room : rooms) {
@@ -142,7 +142,7 @@ public class Room {
         return list;
     }
 
-    public static void loadRoom() {
+    public static void load() {
         String content = Arquivo.Read(fileName);
         if (!content.isEmpty()) {
             for (String line : content.split("\n")) {

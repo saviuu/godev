@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author Carlos
+ * @author Sávio Bertoldi
  */
 public class GoDevSenior {
 
@@ -18,8 +18,8 @@ public class GoDevSenior {
      */
     public static void main(String[] args) {
         Person.loadPeople();
-        Food.loadFood();
-        Room.loadRoom();
+        Food.load();
+        Room.load();
 
         Scanner in = new Scanner(System.in);
 
@@ -56,19 +56,37 @@ public class GoDevSenior {
                     case 3:
                         System.out.println("Informe o nome da área de alimentação: ");
                         String placeName = in.nextLine();
-                        Food foodPlace = new Food(placeName);
-                        Food.foodPlace.add(foodPlace);
+                        System.out.println("Informe a lotação da sala: ");
+                        int lotacaoPlace = Integer.parseInt(in.nextLine());
+                        Food foodPlace = new Food(placeName, lotacaoPlace);
+                        Food.foods.add(foodPlace);
                         break;
 
                     case 4:
-                        Room.printRooms();
-                        Food.printFoodPlace();
+                        Room.print();
+                        break;
+                        
+                    case 5:
+                        Food.print();
+                        break;
+                        
+                    case 6:
+                       System.out.println("Informe o nome do participante: ");
+                        String nomeP = in.nextLine();
+                        System.out.println("Informe o sobrenome do participante: ");
+                        String sobrenomeP = in.nextLine();
+                        Person person = Person.getPersonByName(nomeP, sobrenomeP);
+                        if(person != null){
+                            person.print();
+                        } else {
+                            System.out.println("O participante informado não foi encontrado");
+                        }
                         break;
 
-                    case 5:
+                    case 7:
                         Person.savePeople();
-                        Food.saveFood();
-                        Room.saveRoom();
+                        Food.save();
+                        Room.save();
                         break;
                 }
             } catch (NumberFormatException e) {
@@ -80,10 +98,13 @@ public class GoDevSenior {
 
     private static void printMenu() {
         System.out.println("Escolha uma das opção abaixo:");
-        System.out.println("[1] Cadastro de participantes");
-        System.out.println("[2] Cadastro de salas");
-        System.out.println("[3] Área de alimentação");
-        System.out.println("[5] Salvar dados");
+        System.out.println("[1] Cadastro de Participantes");
+        System.out.println("[2] Cadastro de Salas");
+        System.out.println("[3] Cadastro de Área de alimentação");
+        System.out.println("[4] Consulta de Salas");
+        System.out.println("[5] Consulta de Áreas de alimentação");
+        System.out.println("[6] Consulta de Participantes");
+        System.out.println("[7] Salvar Dados");
         System.out.println("");
 
     }

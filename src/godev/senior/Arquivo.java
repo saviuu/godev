@@ -14,41 +14,40 @@ import java.io.PrintWriter;
 
 /**
  *
- * @author Carlos
+ * @author Sávio Bertoldi
  */
 public class Arquivo {
-     public static String Read(String Caminho){
+
+    public static String Read(String Caminho) {
         String conteudo = "";
         try {
             FileReader arq = new FileReader(Caminho);
             BufferedReader lerArq = new BufferedReader(arq);
-            String linha="";
+            String linha = "";
             try {
                 linha = lerArq.readLine();
-                while(linha!=null){
-                    conteudo += linha+"\n";
+                while (linha != null) {
+                    conteudo += linha + "\n";
                     linha = lerArq.readLine();
                 }
                 arq.close();
                 return conteudo;
             } catch (IOException ex) {
-                System.out.println("Erro: Não foi possível ler o arquivo!");
                 return "";
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("Erro: Arquivo não encontrado!");
             return "";
         }
     }
-    
-    public static boolean Write(String Caminho,String Texto){
+
+    public static boolean Write(String Caminho, String Texto) {
         try {
             FileWriter arq = new FileWriter(Caminho);
             PrintWriter gravarArq = new PrintWriter(arq);
             gravarArq.println(Texto);
             gravarArq.close();
             return true;
-        }catch(IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
             return false;
         }

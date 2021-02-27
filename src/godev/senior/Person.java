@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Carlos
+ * @author Sávio Bertoldi
  */
 public class Person {
 
@@ -63,5 +63,54 @@ public class Person {
 
             }
         }
+    }
+
+    public void print() {
+        Room firstRoom = null;
+        Room secondRoom = null;
+        for (Room room : Room.rooms) {
+            if (room.getPeople().get(1).contains(this)) {
+                firstRoom = room;
+
+            }
+            if (room.getPeople().get(2).contains(this)) {
+                secondRoom = room;
+
+            }
+        }
+        Food firstPlaceFood = null;
+        Food secondPlaceFood = null;
+        for (Food food : Food.foods) {
+            if (food.getPeople().get(1).contains(this)) {
+                firstPlaceFood = food;
+
+            }
+            if (food.getPeople().get(2).contains(this)) {
+                secondPlaceFood = food;
+
+            }
+        }
+
+        if (firstRoom != null) {
+            System.out.println("Sala da primeira etapa: " + firstRoom.getNome());
+        }
+        if (secondRoom != null) {
+            System.out.println("Sala da segunda etapa: " + secondRoom.getNome());
+        }
+        if (firstPlaceFood != null) {
+            System.out.println("Área de alimentação da primeira etapa: " + firstPlaceFood.getNome());
+        }
+        if (secondPlaceFood != null) {
+            System.out.println("Área de alimentação da segunda etapa: " + secondPlaceFood.getNome());
+        }
+    }
+
+    public static Person getPersonByName(String nome, String sobrenome) {
+        for (Person person : people) {
+            if (person.getNome().equalsIgnoreCase(nome) && person.getSobrenome().equalsIgnoreCase(sobrenome)) {
+                return person;
+            }
+        }
+        return null;
     }
 }
